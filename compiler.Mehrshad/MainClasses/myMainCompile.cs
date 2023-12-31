@@ -11,15 +11,15 @@ namespace compiler.Mehrshad.MainClasses;
 // 40012341054038
 public class myMainCompile
 {
-    private static List<string> keywords = new List<string >();
-    private static List<string> symbol = new List<string>();
-    private static List<string> command = new List<string>();
-    private static List<string> consts = new List<string>();
-    private static bool JustNumber = false;
     private static Regex rgxNumber = new Regex("^[0-9]");
     private static Regex rgxHasChar = new Regex(@"^[a-zA-Z]+$");
 
-    
+    private static List<string> keywords = new List<string >();
+    private static List<string> symbol = new List<string>();
+    private static List<string> command = new List<string>();
+    private static List<string> operators = new List<string>();
+
+    private static bool JustNumber = false;
     public static void OrderingData()
     {
         keywords.Add( "var");
@@ -27,9 +27,8 @@ public class myMainCompile
         keywords.Add("string");
         keywords.Add("char");
 
-        symbol.Add("+");
         symbol.Add("*");
-        symbol.Add("/");
+        symbol.Add("{");
         symbol.Add("$");
 
         command.Add("if");
@@ -37,16 +36,16 @@ public class myMainCompile
         command.Add("foreach");
         command.Add("go");
 
-        consts.Add("=");
-        consts.Add("-");
-        consts.Add("+");
-        consts.Add("%");
+        operators.Add("=");
+        operators.Add("-");
+        operators.Add("+");
+        operators.Add("%");
 
     }
 
     public static void Main()
     {
-        var cmd = "2000 int name = 2000 ";
+        var cmd = GetDataFromUser(); 
         string piceCmd = "";
 
         OrderingData();
@@ -55,11 +54,10 @@ public class myMainCompile
         {
             if (myChar == ' ')
             {
-                CheckString(piceCmd.Replace(" " , ""));
+                CheckString(piceCmd);
                 piceCmd = "";
             }
             piceCmd += $"{myChar}";
-
         }
     }
 
@@ -92,12 +90,14 @@ public class myMainCompile
 
     public static int CheckString( string cmd)
     {
+        cmd = cmd.Replace(" ", "");
+
         if (keywords.Any(x => x == cmd))
             Console.WriteLine($"keywords - {cmd} : " + 2000);
         else if (symbol.Any(x => x == cmd))
             Console.WriteLine($"symbol - {cmd} : " + 3000);
-        else if (consts.Any(x => x == cmd))
-            Console.WriteLine($"consts {cmd} : " + 5000);
+        else if (operators.Any(x => x == cmd))
+            Console.WriteLine($"operator {cmd} : " + 5000);
         else
         {
             var isVar = IsVariable(cmd);
@@ -105,11 +105,21 @@ public class myMainCompile
                 Console.WriteLine($"varieble - {cmd} : " + 7356);
 
             else if (isVar == 8000)
-                Console.WriteLine($"numerical var - {cmd} : " + 8000);
+                Console.WriteLine($"const - {cmd} : " + 8000);
             // just number 
         }
 
         return 100;
+    }
+
+    public static string GetDataFromUser()
+    {
+        var userInput = "";
+
+        Console.Write("Enter Code Mr.Farhadi : ");
+        userInput = Console.ReadLine() + " ";
+
+        return userInput;
     }
 }
 
